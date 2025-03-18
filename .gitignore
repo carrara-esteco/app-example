@@ -1,0 +1,5 @@
+dist/
+build/
+.gradle/
+
+/application-service/src/main/resources/*

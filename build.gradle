@@ -1,0 +1,6 @@
+plugins {
+    id 'com.github.node-gradle.node' version '7.0.2'
+}
+
+group 'it.esteco'
+version '1.0.0-SNAPSHOT'

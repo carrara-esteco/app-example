@@ -1,0 +1,33 @@
+apply plugin: "com.github.node-gradle.node"
+
+node {
+  download = true
+  // Version of node to use.
+  version = '20.12.1'
+  // Version of npm to use.
+  npmVersion = '10.5.0'
+  nodeProjectDir = file("${rootDir}/esteco")
+}
+npmInstall.enabled = false
+
+tasks.register('npmCi', NpmTask) {
+  dependsOn npmSetup
+  npmCommand = ["ci"]
+  inputs.file("$rootDir/esteco/package-lock.json")
+  outputs.dirs(fileTree("$rootDir/esteco/node_modules"))
+  onlyIf { !file("$rootDir/esteco/node_modules").exists() }
+  doNotTrackState("disable up-to-date checks for node_modules")
+}
+
+tasks.register('cleanNodeModules', Delete) {
+  outputs.upToDateWhen { false }
+  delete "$projectDir/node_modules"
+}
+
+task ngBuild {
+  inputs.property("aot", rootProject.hasProperty('aot'))
+  dependsOn nodeSetup, npmSetup, npmCi
+  def buildArgs = rootProject.hasProperty('useNxCache') ? [] : ['--', '--skip-nx-cache']
+  def buildTask = project.npm_run_build { args = buildArgs }
+  dependsOn buildTask
+}
