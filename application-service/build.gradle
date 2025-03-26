@@ -30,4 +30,16 @@ compileTestJava {
     options.encoding = 'UTF-8'
 }
 
+tasks.register('copyRunScripts', Copy) {
+    destinationDir = file("$buildDir/quarkus-app")
+    into("") {
+        from "src/main/conf"
+        include('run.sh')
+    }
+    into("") {
+        from "src/main/conf"
+        include('.env')
+    }
+}
 
+build.finalizedBy copyRunScripts
