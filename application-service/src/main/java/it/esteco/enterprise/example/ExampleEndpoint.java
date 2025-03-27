@@ -17,4 +17,11 @@ public class ExampleEndpoint {
     public String sayHello() {
         return service.sayHello();
     }
+
+    @Path("count")
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getGreetingsCount() {
+        return String.valueOf(service.getGreetingsCount());
+    }
 }
